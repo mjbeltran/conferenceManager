@@ -22,5 +22,7 @@ public class Constants {
 	public static int DURATION_LIGHTNING_EVENT = 5;
 	public static int PLUS_HOURS_AFTER_NOON = 4;
 	public static int PLUS_HOURS_AFTER_LUNCH = 1;
+	
+	
 
 }
