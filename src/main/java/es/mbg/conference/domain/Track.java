@@ -1,7 +1,8 @@
 package es.mbg.conference.domain;
 
+import java.time.LocalTime;
+
 import es.mbg.conference.config.Constants;
-import es.mbg.conference.config.TypeEvent;
 
 public class Track {
 
@@ -14,9 +15,15 @@ public class Track {
 		this.mornigSlot = new Slot(Constants.TIME_MORNING_SLOT);
 		this.afternoonSlot = new Slot(Constants.TIME_MAX_AFTERNOON_SLOT);
 		this.lunchSlot = new Slot(Constants.TIME_LUNCH_SLOT);
-		Event lunchEvent = new Event(Constants.LUNCH, Constants.TIME_LUNCH_SLOT);
-		lunchSlot.addEventToSlot(lunchEvent,TypeEvent.LUNCH);
+		addLunchSlot();
 		this.maxTimeTrack = mornigSlot.getTimeMinutes() + afternoonSlot.getTimeMinutes();
+	}
+
+	private void addLunchSlot() {
+		Event lunchEvent = new Event(Constants.LUNCH, Constants.TIME_LUNCH_SLOT);
+		LocalTime startTime = LocalTime.NOON;
+		lunchEvent.setStartTime(startTime);
+		lunchSlot.getListEvent().add(lunchEvent);
 	}
 
 	public Slot getMornigSlot() {
@@ -54,7 +61,7 @@ public class Track {
 	public void refreshTimeTrack() {
 		this.maxTimeTrack = mornigSlot.getTimeMinutes() + afternoonSlot.getTimeMinutes();
 	}
-	
+
 	public boolean hasTimeForEvent(Event event) {
 		return this.maxTimeTrack >= event.getDurationMinutes();
 	}

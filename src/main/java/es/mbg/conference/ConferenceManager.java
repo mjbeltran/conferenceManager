@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import es.mbg.conference.business.EventManagerI;
+import es.mbg.conference.business.TracksManagerI;
+import es.mbg.conference.business.impl.EventManager;
+import es.mbg.conference.business.impl.TracksManager;
 import es.mbg.conference.domain.Conference;
 import es.mbg.conference.domain.Event;
 import es.mbg.conference.domain.Track;
-import es.mbg.conference.tracksmanager.TracksManager;
-import es.mbg.conference.tracksmanager.TracksManagerI;
-import es.mbg.conference.utils.EventHelper;
 
 /**
  * 
@@ -19,6 +20,9 @@ import es.mbg.conference.utils.EventHelper;
 public class ConferenceManager {
 
 	private TracksManagerI tracksManager = TracksManager.getInstance();
+	
+	private EventManagerI eventManager = EventManager.getInstance();
+	
 
 	public Conference conferenceSchecduler(List<String> linesFile) {
 
@@ -28,7 +32,7 @@ public class ConferenceManager {
 
 		Event evento;
 		for (String line : linesFile) {
-			evento = EventHelper.treatmentEventLigne(line);
+			evento = eventManager.treatmentEventLigne(line);
 			listEvents.add(evento);
 		}
 

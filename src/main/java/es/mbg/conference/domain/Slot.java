@@ -1,12 +1,9 @@
 package es.mbg.conference.domain;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.mbg.conference.config.Constants;
-import es.mbg.conference.config.TypeEvent;
-import es.mbg.conference.utils.SlotHelper;
 
 public class Slot {
 
@@ -40,27 +37,6 @@ public class Slot {
 
 	public boolean hasTimeForEvent(Event event) {
 		return this.timeMinutes >= event.getDurationMinutes();
-	}
-
-	public void addEventToSlot(Event event, TypeEvent eventType) {
-		switch (eventType) {
-		case MOORNING:
-			SlotHelper.addMoorningEvent(listEvent, event);
-			break;
-		case AFTERNOON:
-			SlotHelper.addAfternoonEvent(listEvent, event);
-			break;
-		case LUNCH:
-			LocalTime startTime = LocalTime.NOON;
-			event.setStartTime(startTime);
-			break;
-
-		default:
-			break;
-		}
-
-		this.listEvent.add(event);
-		this.timeMinutes = this.timeMinutes - event.getDurationMinutes();
 	}
 
 	@Override
