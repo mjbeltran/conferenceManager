@@ -1,4 +1,4 @@
-package es.mbg.conference.tracksmanager;
+package es.mbg.conference.business;
 
 import java.util.List;
 

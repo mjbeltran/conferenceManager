@@ -1,14 +1,40 @@
-package es.mbg.conference.utils;
+package es.mbg.conference.business.impl;
 
 import java.time.LocalTime;
 import java.util.List;
 
+import es.mbg.conference.business.SlotManagerI;
 import es.mbg.conference.config.Constants;
+import es.mbg.conference.config.TypeEvent;
 import es.mbg.conference.domain.Event;
+import es.mbg.conference.domain.Slot;
 
-public class SlotHelper {
+public class SlotManager implements SlotManagerI {
 
-	public static void addMoorningEvent(List<Event> listEvent, Event event) {
+	@Override
+	public void addEventToSlot(Slot slot, Event event, TypeEvent eventType) {
+		switch (eventType) {
+		case MOORNING:
+			addMoorningEvent(slot.getListEvent(), event);
+			break;
+		case AFTERNOON:
+			addAfternoonEvent(slot.getListEvent(), event);
+			break;
+		case LUNCH:
+			LocalTime startTime = LocalTime.NOON;
+			event.setStartTime(startTime);
+			break;
+
+		default:
+			break;
+		}
+
+		slot.getListEvent().add(event);
+		slot.setTimeMinutes(slot.getTimeMinutes() - event.getDurationMinutes());
+
+	}
+
+	private void addMoorningEvent(List<Event> listEvent, Event event) {
 		Event eventAux;
 		if (listEvent.isEmpty()) {
 			LocalTime startTime = LocalTime.MIN;
@@ -22,7 +48,7 @@ public class SlotHelper {
 
 	}
 
-	public static void addAfternoonEvent(List<Event> listEvent, Event event) {
+	private void addAfternoonEvent(List<Event> listEvent, Event event) {
 		Event eventAux;
 		if (listEvent.isEmpty() && event.getTitle().equals(Constants.NETWORKING_EVENT)) {
 			LocalTime startTime = LocalTime.NOON.plusHours(Constants.PLUS_HOURS_AFTER_NOON);
@@ -45,7 +71,6 @@ public class SlotHelper {
 				event.setStartTime(startTime);
 			}
 		}
-
-	}
+	}	
 
 }

@@ -1,15 +1,25 @@
-package es.mbg.conference.utils;
+package es.mbg.conference.business.impl;
 
 import java.util.regex.Matcher;
 
+import es.mbg.conference.business.EventManagerI;
 import es.mbg.conference.config.Constants;
 import es.mbg.conference.domain.Event;
 import es.mbg.conference.exception.InvalidLineException;
 
-public class EventHelper {
+public class EventManager implements EventManagerI {
 
-	public static Event treatmentEventLigne(String line) {
+	private static EventManager eventManager;
 
+	public static EventManager getInstance() {
+		if (eventManager == null) {
+			eventManager = new EventManager();
+		}
+		return eventManager;
+	}
+
+	@Override
+	public Event treatmentEventLigne(String line) {
 		if (line.length() == 0) {
 			return null;
 		}
@@ -32,6 +42,5 @@ public class EventHelper {
 		Event event = new Event(title, intMinutes);
 
 		return event;
-
 	}
 }

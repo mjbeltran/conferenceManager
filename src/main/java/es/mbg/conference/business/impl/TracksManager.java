@@ -1,7 +1,9 @@
-package es.mbg.conference.tracksmanager;
+package es.mbg.conference.business.impl;
 
 import java.util.List;
 
+import es.mbg.conference.business.SlotManagerI;
+import es.mbg.conference.business.TracksManagerI;
 import es.mbg.conference.config.Constants;
 import es.mbg.conference.config.TypeEvent;
 import es.mbg.conference.domain.Conference;
@@ -11,6 +13,8 @@ import es.mbg.conference.domain.Track;
 public class TracksManager implements TracksManagerI {
 
 	private static TracksManager tracksManager;
+
+	private static SlotManagerI slotManager;
 
 	public static TracksManager getInstance() {
 		if (tracksManager == null) {
@@ -22,25 +26,28 @@ public class TracksManager implements TracksManagerI {
 	public void schedulerEventsTracks(Conference conference, List<Event> listEvents, List<Event> listEventLightning) {
 
 		Track track = new Track();
+		slotManager = new SlotManager();
 		for (Event event : listEvents) {
 			if (track.hasTimeForEvent(event)) {
 				if (track.getMornigSlot().hasTimeForEvent(event)) {
-					track.getMornigSlot().addEventToSlot(event, TypeEvent.MOORNING);
+					slotManager.addEventToSlot(track.getMornigSlot(), event, TypeEvent.MOORNING);
 				} else if (track.getAfternoonSlot().hasTimeForEvent(event)) {
-					track.getAfternoonSlot().addEventToSlot(event, TypeEvent.AFTERNOON);
+					slotManager.addEventToSlot(track.getAfternoonSlot(), event, TypeEvent.AFTERNOON);
 				}
 				track.refreshTimeTrack();
 			} else {
-				track.getAfternoonSlot().addEventToSlot(new Event(Constants.NETWORKING_EVENT, 0), TypeEvent.AFTERNOON);
+				slotManager.addEventToSlot(track.getAfternoonSlot(), new Event(Constants.NETWORKING_EVENT, 0),
+						TypeEvent.AFTERNOON);
 				conference.getConferenceTracks().add(track);
 				track = new Track();
 				if (track.getMornigSlot().hasTimeForEvent(event)) {
-					track.getMornigSlot().addEventToSlot(event, TypeEvent.MOORNING);
+					slotManager.addEventToSlot(track.getMornigSlot(), event, TypeEvent.MOORNING);
 				}
 			}
 
 		}
-		track.getAfternoonSlot().addEventToSlot(new Event(Constants.NETWORKING_EVENT, 0), TypeEvent.AFTERNOON);
+		slotManager.addEventToSlot(track.getAfternoonSlot(), new Event(Constants.NETWORKING_EVENT, 0),
+				TypeEvent.AFTERNOON);
 		conference.getConferenceTracks().add(track);
 	}
 
